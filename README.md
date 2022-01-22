@@ -28,6 +28,7 @@ module.exports = {
 import Router from 'nextjs-super-api'
 
 class UserRoutes extends Router{
+  basepath = '/api/v1/users' // required
 
   constructor(){
     super()

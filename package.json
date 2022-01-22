@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "1.0.1",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -33,6 +33,17 @@
   },
   "name": "nextjs-super-api",
   "author": "Naxrul Ahmed",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/devnax/nextjs-super-api"
+  },
+  "keywords": [
+    "nextjs",
+    "nextjs api",
+    "nextjs-router",
+    "routes",
+    "api-routes"
+  ],
   "module": "dist/nextjs-super-api.esm.js",
   "size-limit": [
     {
