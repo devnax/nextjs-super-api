@@ -26,6 +26,18 @@ export default class Handler extends Factory {
       return this.status(code, info || { message })
    }
 
+   get data(){
+      return this.req.body
+   }
+
+   get query(){
+      return this.req.query
+   }
+
+   get headers(){
+      return this.req.headers
+   }
+
    async excute(index: number = 0) {
       if (!this.handlers[index]) {
          return
@@ -56,9 +68,6 @@ export default class Handler extends Factory {
       return async (req: any, res: any) => {
          self.req = req
          self.res = res
-         self.data = req.body
-         self.query = req.query
-         self.headers = req.headers
          self.formatRoutes()
          self.callback = (type: string, next: any) => {
             if(type == 'next'){

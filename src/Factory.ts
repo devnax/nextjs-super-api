@@ -10,9 +10,6 @@ export default abstract class Factory {
    protected basepath: string = ''
    protected handlers: Function[] = []
    public params: any = {}
-   public data: any = {}
-   public query: any = {}
-   public headers: any = {}
    public catchError: any = {}
    public callback: any = null
    public next: any = {}
