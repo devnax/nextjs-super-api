@@ -37,7 +37,16 @@ export default class Handler extends Factory {
       if(typeof this.callback === 'function'){
          this.callback('next', next)
       }
-      await handler(this.req, this.res, next)
+      
+      try {
+         await handler(this.req, this.res, next)
+      } catch (err) {
+         if (typeof this.catchError === 'function') {
+            this.catchError(err)
+         } else {
+            throw err
+         }
+      }
    }
 
 
