@@ -4,7 +4,7 @@ import StatusCode from "./StatusCode"
 export default class Handler extends Factory {
 
    public status(code: number, json: string | object) {
-      let _ = this.res.status(code)
+      let _ = this._res.status(code)
       return typeof json === 'object' ? _.json(json) : _.end(json)
    }
 
@@ -27,15 +27,23 @@ export default class Handler extends Factory {
    }
 
    get data(){
-      return this.req.body
+      return this._req.body
    }
 
    get query(){
-      return this.req.query
+      return this._req.query
    }
 
    get headers(){
-      return this.req.headers
+      return this._req.headers
+   }
+
+   get req(){
+      return this._req
+   }
+
+   get res(){
+      return this._res
    }
 
    async excute(index: number = 0) {
@@ -51,7 +59,7 @@ export default class Handler extends Factory {
       }
       
       try {
-         await handler(this.req, this.res, next)
+         await handler(this._req, this._res, next)
       } catch (err) {
          if (typeof this.catchError === 'function') {
             this.catchError(err)
@@ -66,8 +74,8 @@ export default class Handler extends Factory {
       const self = new this
 
       return async (req: any, res: any) => {
-         self.req = req
-         self.res = res
+         self._req = req
+         self._res = res
          self.formatRoutes()
          self.callback = (type: string, next: any) => {
             if(type == 'next'){

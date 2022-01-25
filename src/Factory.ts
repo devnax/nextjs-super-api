@@ -2,8 +2,8 @@ import { parse as Parser } from 'regexparam'
 
 
 export default abstract class Factory {
-   protected req:any = null
-   protected res:any = null
+   protected _req:any = null
+   protected _res:any = null
    protected routes:any = {}
    protected use_routes:any = {}
    protected middlewares: Function[] = []
@@ -34,8 +34,8 @@ export default abstract class Factory {
    }
 
    protected formatRoutes() {
-      const url         = this.req.url
-      const method      = this.req.method.toLowerCase()
+      const url         = this._req.url
+      const method      = this._req.method.toLowerCase()
       const routes      = this.routes[method]
       const use_routes  = this.use_routes
       const middlewares = this.middlewares
