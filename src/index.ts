@@ -10,11 +10,16 @@ export default class Router extends Handler{
       this.routes[method_name][path] =  this.formatHandlers(methods)
    }
 
-   public use(path: string | Function, ...methods: any){
+   public use(path: string | Function, ...methods: Function[]){
       if(typeof path == 'string'){
          this.use_routes[path] =  this.formatHandlers(methods)
       }else{
          this.middlewares.push(path.bind(this))
+         if(methods.length){
+            for(let m of methods){
+               this.middlewares.push(m.bind(this))
+            }
+         }
       }
    }
 
