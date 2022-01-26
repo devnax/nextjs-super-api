@@ -52,17 +52,17 @@ export default class Handler extends Factory {
       }
       const handler: Function = this.handlers[index]
       const next = async () => {
-         await this.excute(index + 1)
+        return await this.excute(index + 1)
       }
       if(typeof this.callback === 'function'){
-         this.callback('next', next)
+         await this.callback('next', next)
       }
       
       try {
-         await handler(this._req, this._res, next)
+         return await handler(this._req, this._res, next)
       } catch (err) {
          if (typeof this.catchError === 'function') {
-            this.catchError(err)
+            await this.catchError(err)
          } else {
             throw err
          }

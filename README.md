@@ -23,7 +23,7 @@ module.exports = {
 
 ## Uses
 ```js
-// api/v1/user.js
+// api/v1/users.js
 
 import Router from 'nextjs-super-api'
 
