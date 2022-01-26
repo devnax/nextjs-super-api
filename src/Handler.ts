@@ -50,9 +50,10 @@ export default class Handler extends Factory {
       if (!this.handlers[index]) {
          return
       }
-      const handler: Function = this.handlers[index]
+      
+      const handler: Function = this.handlers[index].bind(this)
       const next = async () => {
-        return await this.excute(index + 1)
+        await this.excute(index + 1)
       }
       if(typeof this.callback === 'function'){
          await this.callback('next', next)
@@ -79,7 +80,7 @@ export default class Handler extends Factory {
          self.formatRoutes()
          self.callback = (type: string, next: any) => {
             if(type == 'next'){
-               self.next   = next
+               self.next   = next.bind(self)
             }
          }
          if (!self.handlers.length) {
@@ -87,10 +88,10 @@ export default class Handler extends Factory {
          }
 
          try {
-            await self.excute()
+            return await self.excute()
          } catch (err) {
             if (typeof self.catchError === 'function') {
-               self.catchError(err)
+               return await self.catchError(err)
             } else {
                throw err
             }
