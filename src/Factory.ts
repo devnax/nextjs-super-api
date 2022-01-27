@@ -34,7 +34,7 @@ export default abstract class Factory {
    }
 
    protected formatRoutes() {
-      const url         = this._req.url
+      const url         = this._req.url.split('?').shift()
       const method      = this._req.method.toLowerCase()
       const routes      = this.routes[method]
       const use_routes  = this.use_routes
