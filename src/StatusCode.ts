@@ -1,8 +1,5 @@
-type Type = {
-   [key: number]: string 
-}
 
-const StatusCode: Type = {
+const StatusCode = {
    200: "OK",
    201: "Created",
    202: "Accepted",
@@ -22,5 +19,8 @@ const StatusCode: Type = {
    407: "Proxy Authentication Required",
    408: "Request Timeout"
 }
+
+export type StatusCodeType = typeof StatusCode
+export type StatusCodeIndex = keyof StatusCodeType
 
 export default StatusCode

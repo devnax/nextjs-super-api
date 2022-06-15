@@ -1,14 +1,18 @@
 import Factory from "./Factory"
 import StatusCode from "./StatusCode"
+import type { NextApiRequest, NextApiResponse } from "next";
+import { StatusCodeIndex } from './StatusCode'
+import { HandlerType } from './types'
+
 
 export default class Handler extends Factory {
 
-   public status(code: number, json: string | object) {
-      let _ = this._res.status(code)
-      return typeof json === 'object' ? _.json(json) : _.end(json)
+   public status(code: StatusCodeIndex, data: string | object) {
+      let _ = this._res?.status(code)
+      return typeof data === 'object' ? _?.json(data) : _?.end(data)
    }
 
-   public error(info: any, code: any) {
+   public error(info: string | object, code?: StatusCodeIndex) {
       code = code || 400
       let message = "Bad Request"
       if (StatusCode.hasOwnProperty(code)) {
@@ -17,53 +21,54 @@ export default class Handler extends Factory {
       return this.status(code, info || { message })
    }
 
-   public json(info: any, code: any) {
+   public json(info: object, code?: StatusCodeIndex) {
       code = code || 200
-      let message = "OK"
-      if (StatusCode.hasOwnProperty(code)) {
-         message = StatusCode[code]
-      }
+      let message = StatusCode[code] || "OK"
       return this.status(code, info || { message })
    }
 
-   get data(){
-      return this._req.body
+   get body() {
+      return this._req?.body as NextApiRequest['body']
    }
 
-   get query(){
-      return this._req.query
+   get query() {
+      return this._req?.query as NextApiRequest['query']
    }
 
-   get headers(){
-      return this._req.headers
+   get headers() {
+      return this._req?.headers as NextApiRequest['headers']
    }
 
-   get req(){
-      return this._req
+   get req() {
+      return this._req as NextApiRequest
    }
 
-   get res(){
-      return this._res
+   get res() {
+      return this._res as NextApiResponse
    }
 
-   async excute(index: number = 0) {
+   next() {
+      if (this._next_cb) {
+         this._next_cb()
+      }
+   }
+
+   async excute(req: NextApiRequest, res: NextApiResponse, index: number = 0) {
       if (!this.handlers[index]) {
          return
       }
-      
-      const handler: Function = this.handlers[index].bind(this)
+
+      const handler: HandlerType = this.handlers[index].bind(this)
       const next = async () => {
-        await this.excute(index + 1)
+         await this.excute(req, res, index + 1)
       }
-      if(typeof this.callback === 'function'){
-         await this.callback('next', next)
-      }
-      
+
+      this._next_cb = next.bind(this);
       try {
-         return await handler(this._req, this._res, next)
+         await handler(req, res, next)
       } catch (err) {
          if (typeof this.catchError === 'function') {
-            await this.catchError(err)
+            this.catchError(err)
          } else {
             throw err
          }
@@ -71,27 +76,28 @@ export default class Handler extends Factory {
    }
 
 
+   errorPage() {
+      this.status(404, "404 This route could not be found.")
+   }
+
+
    static listen() {
       const self = new this
 
-      return async (req: any, res: any) => {
+      return async (req: NextApiRequest, res: NextApiResponse) => {
          self._req = req
          self._res = res
+
          self.formatRoutes()
-         self.callback = (type: string, next: any) => {
-            if(type == 'next'){
-               self.next   = next.bind(self)
-            }
-         }
          if (!self.handlers.length) {
-            return res.status(404).end("404 This route could not be found.")
+            return self.errorPage()
          }
 
          try {
-            return await self.excute()
+            await self.excute(req, res)
          } catch (err) {
             if (typeof self.catchError === 'function') {
-               return await self.catchError(err)
+               self.catchError(err)
             } else {
                throw err
             }

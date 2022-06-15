@@ -28,7 +28,7 @@ module.exports = {
 import Router from 'nextjs-super-api'
 
 class UserRoutes extends Router{
-  basepath = '/api/v1/users' // required
+  basepath = '/v1/users' // optional
 
   constructor(){
     super()
@@ -50,7 +50,7 @@ class UserRoutes extends Router{
 
 
     // you can use also
-    this.get(path, this.anymethod, () => {}, this.another, ...)
+    this.get(path, ...middlewares, () => {}, this.another, ...)
 
 
     // params
@@ -62,9 +62,7 @@ class UserRoutes extends Router{
   }
 
   middleware(req, res, next){
-
     next()
-
     // or you can call this.next()
   }
 
@@ -97,16 +95,15 @@ class UserRoutes extends Router{
 export default UserRoute.listen() // Must call this
 
 
-// Class Public Properties
+// Methods you can call in class
 
 this.next() // this is for middleare
-this.data // it's just return req.body
-this.params // req.headers
-this.query // req.headers
+this.body // req.body
+this.params // req.params
+this.query // req.query
 this.headers // req.headers
-this.json(string|object, code)
-this.error(string|object, code)
-this.status(200).json()
-this.status(400).end()
+this.json(object, code?)
+this.error(string|object, code?)
+this.status(200, string|object)
 ```
 
