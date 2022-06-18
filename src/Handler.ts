@@ -1,27 +1,26 @@
 import Factory from "./Factory"
 import StatusCode from "./StatusCode"
 import type { NextApiRequest, NextApiResponse } from "next";
-import { StatusCodeIndex } from './StatusCode'
-import { HandlerType } from './types'
+import { HandlerType, RouterType as DefType, ValueOf } from './types'
+import { ErrorStatusCodeType, SuccessStatusCodeType, StatusCodeType } from "./StatusCode";
 
+export default class Handler<RouterType extends DefType> extends Factory {
 
-export default class Handler extends Factory {
-
-   public status(code: StatusCodeIndex, data: string | object) {
-      let _ = this._res?.status(code)
+   public status(code: keyof RouterType['statusCodes'] & keyof StatusCodeType, data: ValueOf<RouterType['statusCodes'] & StatusCodeType> | string | object) {
+      let _ = this._res?.status(code as number)
       return typeof data === 'object' ? _?.json(data) : _?.end(data)
    }
 
-   public error(info: string | object, code?: StatusCodeIndex) {
+   public error(info: RouterType['response'], code?: keyof ErrorStatusCodeType) {
       code = code || 400
       let message = "Bad Request"
-      if (StatusCode.hasOwnProperty(code)) {
+      if (code && StatusCode.hasOwnProperty(code)) {
          message = StatusCode[code]
       }
-      return this.status(code, info || { message })
+      return this.status(code as any, info || { message })
    }
 
-   public json(info: object, code?: StatusCodeIndex) {
+   public json(info: RouterType['response'], code?: keyof SuccessStatusCodeType) {
       code = code || 200
       let message = StatusCode[code] || "OK"
       return this.status(code, info || { message })

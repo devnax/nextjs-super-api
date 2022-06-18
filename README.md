@@ -1,7 +1,6 @@
 > Basic and Simple Routing system for nextjs
 
 
-
 ## Configure
 ```js
 // next.config.js
@@ -14,7 +13,6 @@ module.exports = {
       }
     ]
   }
-  
 }
 
 ```
@@ -107,3 +105,27 @@ this.error(string|object, code?)
 this.status(200, string|object)
 ```
 
+
+
+## Typescript
+
+```ts
+import Router, {RouterType} from 'nextjs-super-api'
+
+interface MyType extends RouterType{
+  routes: {
+    get: "/" | "/:id",
+    post: "/"
+  },
+  response: string | object;
+  statusCodes: {
+    200: "Success"
+  }
+}
+
+
+class UserRoutes extends Router<MyType>{
+
+}
+
+```

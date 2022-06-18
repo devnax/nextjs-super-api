@@ -1,5 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next"
+import {StatusCodeType} from './StatusCode'
 
+
+export type ValueOf<T> = T[keyof T];
 
 export type MethodTypes = "get" | "post" | "put" | "delete" | "connect" | "option" | "trace" | "patch"
 
@@ -18,4 +21,11 @@ export type UseRouteFactoryType = {
 export type ParseType = {
    keys: string[];
    pattern: RegExp;
+}
+
+
+export interface RouterType{
+   routes: Partial<{[key in MethodTypes]: string}>,
+   response: string | object;
+   statusCodes: StatusCodeType
 }
