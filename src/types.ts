@@ -27,5 +27,8 @@ export type ParseType = {
 export interface RouterType{
    routes: Partial<{[key in MethodTypes]: string}>,
    response: string | object;
-   statusCodes: StatusCodeType
+   statusCodes: StatusCodeType;
+   query: {[key: string]: string | string[]};
+   params: {[key: string]: string | string[]};
+   body: any;
 }

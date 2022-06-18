@@ -11,7 +11,7 @@ export default abstract class Factory {
    protected middlewares: HandlerType[] = []
    protected basepath: string = __filename.split(/api\\(.*)\./)[1].replace(/\\/, "/")
    protected handlers: HandlerType[] = []
-   public params: object = {}
+   protected _params: object = {}
    public catchError: ((err: any) => void) | null = null;
    protected _next_cb: Function = null as any
 
@@ -66,7 +66,7 @@ export default abstract class Factory {
             }
          }
 
-         this.params = params
+         this._params = params
          this.handlers = handlers
       }
 

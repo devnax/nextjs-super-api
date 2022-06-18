@@ -120,7 +120,10 @@ interface MyType extends RouterType{
   response: string | object;
   statusCodes: {
     200: "Success"
-  }
+  },
+  query: {[key: string]: string | string[]};
+  params: {[key: string]: string | string[]};
+  body: any;
 }
 
 

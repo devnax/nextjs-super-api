@@ -26,12 +26,16 @@ export default class Handler<RouterType extends DefType> extends Factory {
       return this.status(code, info || { message })
    }
 
+   get params() {
+      return this._params as RouterType['params']
+   }
+
    get body() {
-      return this._req?.body as NextApiRequest['body']
+      return this._req?.body as RouterType['body']
    }
 
    get query() {
-      return this._req?.query as NextApiRequest['query']
+      return this._req?.query as RouterType['query']
    }
 
    get headers() {
