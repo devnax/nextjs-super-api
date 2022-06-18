@@ -28,7 +28,7 @@ export interface RouterType{
    routes: Partial<{[key in MethodTypes]: string}>,
    response: string | object;
    statusCodes: StatusCodeType;
-   query: {[key: string]: string | string[]};
-   params: {[key: string]: string | string[]};
+   query: {[key: string]: any} | any;
+   params: {[key: string]: any} | any;
    body: any;
 }
