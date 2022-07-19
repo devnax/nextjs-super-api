@@ -12,8 +12,12 @@ export default abstract class Factory {
    protected basepath: string = __filename.split(/api\\(.*)\./)[1].replace(/\\/, "/")
    protected handlers: HandlerType[] = []
    protected _params: object = {}
-   public catchError: ((err: any) => void) | null = null;
    protected _next_cb: Function = null as any
+   public catchError: ((err: any) => void) | null = null;
+
+   requestEnd(_req: NextApiRequest, res: NextApiResponse){
+      res.status(500).end("Server Error")
+   }
 
 
    protected formatHandlers(handlers: HandlerType[]) {
@@ -67,6 +71,9 @@ export default abstract class Factory {
          }
 
          this._params = params
+         if(this.requestEnd){
+            handlers.push(this.requestEnd)
+         }
          this.handlers = handlers
       }
 

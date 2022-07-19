@@ -78,7 +78,6 @@ export default class Handler<RouterType extends DefType> extends Factory {
       }
    }
 
-
    errorPage() {
       this.status(404, "404 This route could not be found.")
    }
